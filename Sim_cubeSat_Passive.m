@@ -1,16 +1,21 @@
-%Based on "Passive Magnetic Attitude Control for CubeSat Spacecraft"
-% this section is purely for intro calculations. 
-%  use this function for exporting to csv: https://www.mathworks.com/help/releases/R2019b/matlab/ref/writematrix.html
+% This is the first part of the simulation, to determine the strength of the magents required. 
+% Based on "Passive Magnetic Attitude Control for CubeSat Spacecraft"
+% This section is purely for intro calculations. 
+% Use this function for exporting to csv: https://www.mathworks.com/help/releases/R2019b/matlab/ref/writematrix.html
+
+% to interpret this data, 
+% use m_bar as the recommended strength for the main magnet. 
+% 
 
 
 close ALL
 clear 
 
-%% General values and Torques
+%% General Torques acting on the cubesat
 % values are from the PDF documents, subject to change depending on altitude. Can be variable. 
-T_aero = 8E-8; 
-T_grav = 6E-8;
-T_radi = 1E-8;
+T_aero = 8E-8; % aerodynamic
+T_grav = 6E-8; % gravity gradient
+T_radi = 1E-8; % radiometric torques
 
 % to get the RMS values, for T. 
 T_rms = sqrt((1/3)*(T_aero^2 + T_grav^2 + T_radi^2)); 
@@ -36,9 +41,9 @@ a = 1.496*(10^11); % earth semi major axis, taken from online sources. 1AU = 1.4
 d = 86.4*(10^3); % seconds per one day
 no = (d/2*pi)*(sqrt(G*(M+m_earth)/(a^3))); 
 
-k1 = 0; 
+k1 = 0; % these values are for an iterative function, they represent the variable K. 
 k2 = 28;
-dk =  1; 
+dk =  0.5; 
 
 k = k1:dk:k2; 
 
@@ -54,7 +59,7 @@ plot(k,m_res,'r',k,m_res_perp,'b')
 xlabel('k') % label the x-axis
 ylabel('m_res') % label the y-axis
 
-csvwrite('magnetic_moment_results.csv',M)
+csvwrite('magnetic_moment_results.csv',M)  % to export the data for analysis. 
 
 %% Hysteresis Rods design 
 %purpose of these rods are to be mounted in pairs, orthogonal to the main magnet to benefit from maximum dampening. 
@@ -63,8 +68,6 @@ csvwrite('magnetic_moment_results.csv',M)
 L = 80/1000; % length of H. rods, max length should be 9cm, as it is a phyiscal restriction, for a cube satellite. 80mm was picked as it could fit within the ACS module, and held with mounting brackets.
 D = 25/1000; % diameter of rods, in meters. 
 
-
-U_hyst = 1.5*(10^4); % unit is H/m, value is varies depending on magnetic material, follows hysteresis loop diagram of B and H. 
 Hs = 100; % uni A/m, material saturation field strength, depends on material. Using HyMu-80 as example.
 H = Hs; % temporary putting at as HS for now. 
 uo = 1.25663706*(10^-6); %unit m*kg/((s^2)(A^2))permeability of free space, for sake of this sim, this value is considered as a constant. 
@@ -73,11 +76,10 @@ Vol_hyst = L*(0.25*pi*(D^2));  % volume of the hysteresis rods.
 
 N = ((L/D) * (4/sqrt(pi) ) +2)^(-1); % demagnetizing factor of the hyst. rods. 
 
+U_hyst = 1.5*(10^4); % unit is H/m, value is varies depending on magnetic material, follows hysteresis loop diagram of B and H. 
 U_hyst_appt = (U_hyst)/(1+(N*U_hyst)); % apparent relative permeability of the hyst. rod. 
+
 B_hyst = uo*U_hyst_appt*H; % induced magnetic flux. Definition: The magnetic flux through a surface is the component of the magnetic field passing through that surface
 B_hyst_sat = uo*U_hyst_appt*Hs; % induced magnetic flux. Definition: The magnetic flux through a surface is the component of the magnetic field passing through that surface
 
 m_hyst_rod = (B_hyst * Vol_hyst) / uo;  % magentic moment for the rods. Definition: Magnetic Moment is defined as magnetic strength and orientation of a magnet or other object that produces a magnetic field. 
-
-% export variables to excel list? avoid commands?
-% yeah it is a good idea, and good practice. 
