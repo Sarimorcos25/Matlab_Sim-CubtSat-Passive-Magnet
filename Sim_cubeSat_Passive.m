@@ -31,7 +31,8 @@ m_bar = 10*(T_rms/(Bmin*sin(Bmax))) %recommended bar strength based on modified 
 % needs to do multiple entries and rows before figuring out m values.
 Ixx = 3.6*(10^-3); %unit is kg*m^2  // This is an assumption, to be changed after getting a CAD model data. 
 Iyy = 1.7*(10^-2); %same unit as Ixx. 
-% Izz isn't included as it is assumed it is the same as Iyy
+% Izz isn't included as it is assumed it is the same as Iyy due to the
+% design of the cubic satellite. 
 Beq = 2.3*(10^-5); %unit is Tesla, magnetic flux density at equator. 
 
 G = 6.674*(10^-11); % grav constant. 
@@ -60,7 +61,7 @@ xlabel('k') % label the x-axis
 ylabel('m_res') % label the y-axis
 
 csvwrite('magnetic_moment_results.csv',M)  % to export the data for analysis. 
-
+saveas(gcf,'Plot_magnet_strength.png') % this will export the plot as a png file. 
 %% Hysteresis Rods design 
 %purpose of these rods are to be mounted in pairs, orthogonal to the main magnet to benefit from maximum dampening. 
 %This section will determine how strong each rod should be, so that they can be effective. 
