@@ -84,4 +84,4 @@ U_hyst_appt = (U_hyst)/(1+(N*U_hyst)); % apparent relative permeability of the h
 B_hyst = uo*U_hyst_appt*H; % induced magnetic flux. Definition: The magnetic flux through a surface is the component of the magnetic field passing through that surface
 B_hyst_sat = uo*U_hyst_appt*Hs; % induced magnetic flux. Definition: The magnetic flux through a surface is the component of the magnetic field passing through that surface
 
-m_hyst_rod = (B_hyst * Vol_hyst) / uo;  % magentic moment for the rods. Definition: Magnetic Moment is defined as magnetic strength and orientation of a magnet or other object that produces a magnetic field. 
+m_hyst_rod = (B_hyst * Vol_hyst) / uo  % magentic moment for the rods. Definition: Magnetic Moment is defined as magnetic strength and orientation of a magnet or other object that produces a magnetic field. 
